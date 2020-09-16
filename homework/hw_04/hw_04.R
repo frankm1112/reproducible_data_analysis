@@ -57,7 +57,7 @@ ggplot(Cnw_long, aes(x= year, y=Baby_Count))+geom_line(aes(colour= Sex))
 ### generate blue and red/pink lines for the genders.
 ###-----------------------------------------------------
 
-ggplot(Cnw_long, aes(x= year, y=Baby_Count))+geom_smooth()
+ggplot(Cnw_long, aes(x= year, y=Baby_Count))+geom_smooth(aes(colour= Sex))
 
 ###-----------------------------------------------------
 ### Another way of representing the data is by using a 
