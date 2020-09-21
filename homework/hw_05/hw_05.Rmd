@@ -1,0 +1,66 @@
+---
+title: "Homework 5"
+output: github_document
+---
+First load the libraries necessary for the following functions. These are the
+packages "nycflights13" and "tidyverse".
+```{r libraries, message=FALSE}
+library(nycflights13)
+library(tidyverse)
+```
+The command below allows for the "visualization" the documentation of flights.
+
+```{r visualization, message=FALSE}
+?nycflights13::flights
+```
+
+Next, we can use the glimpse() function to view the "flights" data frame.
+```{r}
+glimpse(flights)
+```
+
+If we wish to see the number of total flights that were delayed by a minimum
+of two hours, we can enter the command below. "120" is used as the delayed
+departure time is recorded in minutes.
+
+```{r}
+a <- filter(flights, dep_delay >= 120)
+```
+This results indicates that of the original 336,776 flights, 120,382 of them 
+had a late departure time of at least two hours. 
+
+It may be deemed a nuisance trying to sort through both carrier abbreviations
+and flight numbers, so we can combine the two via the command below, into a 
+new column labeled flight_number.
+
+```{r}
+b <- mutate(flights, flight_number = (paste(carrier,flight)))
+print(b)
+```
+```{r}
+d <- summarise(b, flight_number,year,month,day,dep_time,sched_dep_time, dep_delay,arr_time,sched_arr_time,arr_delay, carrier,flight, tailnum, origin, dest,air_time, distance, hour, minute, time_hour)
+print(d)
+```
+
+Next we need to group the flights by the "carrier" and "tailnum" variables from 
+the previously created data frame. This can be done using the command below.
+
+```{r}
+e <- group_by(d,carrier,tailnum)
+print(e)
+```
+
+After creating this data frame above, we can summarize the results and identify 
+how many times a plane with "x" tailnum flew for a specific carrier. This is 
+done via the command below.
+
+```{r}
+f <- group_by(summarise(e,tailnum,n(),.groups='drop'))
+print(f)
+```
+
+
+
+
+
+
