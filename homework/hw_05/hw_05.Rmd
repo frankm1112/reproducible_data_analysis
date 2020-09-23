@@ -24,8 +24,8 @@ of two hours, we can enter the command below. "120" is used as the delayed
 departure time is recorded in minutes.
 
 ```{r}
-a <- filter(flights, dep_delay >= 120)
-print(a)
+two_hr_late <- filter(flights, dep_delay >= 120)
+print(two_hr_late)
 ```
 This results indicates that of the original 336,776 flights, 9,888 of them 
 had a late departure time of at least two hours. 
@@ -35,32 +35,31 @@ and flight numbers, so we can combine the two via the command below, into a
 new column labeled flight_number.
 
 ```{r}
-b <- mutate(flights, flight_number = (paste(carrier,flight)))
-print(b)
+flight_number <- flights %>%
+  mutate(flight_number = (paste(carrier, flight)))
+print(flight_number)
 ```
-```{r}
-d <- summarise(b, flight_number,year,month,day,dep_time,sched_dep_time, dep_delay,arr_time,sched_arr_time,arr_delay, carrier,flight, tailnum, origin, dest,air_time, distance, hour, minute, time_hour)
-print(d)
-```
-
-Next we need to group the flights by the "carrier" and "tailnum" variables from 
-the previously created data frame. This can be done using the command below.
+Next, if we wanted, we can actually reorder the statement to put the
+"flight_number" column in the front. Just a personal preference.
 
 ```{r}
-e <- group_by(d,carrier,tailnum)
-print(e)
+flight_number_reordered <- summarise(flight_number, flight_number, year, month,day, dep_time, sched_dep_time, dep_delay, arr_time, sched_arr_time, arr_delay, carrier, flight, tailnum, origin, dest,air_time, distance, hour, minute, time_hour)
+print(flight_number_reordered)
 ```
 
-After creating this data frame above, we can summarize the results and identify 
-how many times a plane with "x" tailnum flew for a specific carrier. This is 
-done via the command below.
+Lastly, we want to determine how many times each plane flew for a certain 
+carrier. We can do this by looking at our previous data set, then telling the
+script to group the data based on the 'tailnum', or plane identifier, with the
+'carrier' they flew for. Then by summarizing the number of times those two
+are found identical on the same flight, we can have it relay that value,
+n(), as a variable called 'planes.for.carrier'.
 
 ```{r}
-f <- group_by(summarise(e,tailnum,n(),.groups='drop'))
-print(f)
+planes_for_carrier <- flight_number_reordered %>%
+  group_by(tailnum, carrier) %>%
+  summarise(planes.for.carrier = n(), .groups='keep')
+print(planes_for_carrier)
 ```
-
-
 
 
 
