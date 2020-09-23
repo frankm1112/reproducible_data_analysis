@@ -25,8 +25,9 @@ departure time is recorded in minutes.
 
 ```{r}
 a <- filter(flights, dep_delay >= 120)
+print(a)
 ```
-This results indicates that of the original 336,776 flights, 120,382 of them 
+This results indicates that of the original 336,776 flights, 9,888 of them 
 had a late departure time of at least two hours. 
 
 It may be deemed a nuisance trying to sort through both carrier abbreviations
