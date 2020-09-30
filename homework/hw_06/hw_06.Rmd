@@ -8,7 +8,7 @@ library(tidyverse)
 ```
 
 
-![The Good Plot](plots/goodplot.png)
+![The Good Plot](plots/goodplot.PNG)
 
 1. This graph shows the variation in growth of two bacterial species, CB-A and
 CB-D. This is a line graph showing a standard growth curve. 
@@ -27,7 +27,7 @@ that lead to niche-specific fitness effects. ISME J 14, 1688–1700 (2020).
 https://doi.org/10.1038/s41396-020-0637-z
 
 
-![The Bad Plot](plots/badplot.png)
+![The Bad Plot](plots/badplot.PNG)
 
 1. This plot is showing growth dynamics of a marine bacteria with two gene
 knockouts of the same species.
