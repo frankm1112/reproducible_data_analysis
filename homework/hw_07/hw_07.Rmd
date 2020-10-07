@@ -281,4 +281,4 @@ ggplot(UTK_Covid_Data, aes(x = Date, y = Students))+
   theme(axis.line = element_line(colour="black", size = 1, linetype= "solid")) +
   geom_point()
 ```
-![The Good Plot](plots/good_plot.PNG)
+![The Good Plot](plots/good_plot.png)
