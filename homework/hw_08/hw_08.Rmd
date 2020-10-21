@@ -54,37 +54,37 @@ The next step is to introduce a column into the mtcars dataset for "displacement
 per cylinder". We can do that via the commands below, where we tell R to add 
 store 'mtcars' as a new dataframe called 'mtcars.data' and then add the column
 called 'displacement.per.cylinder' to it, which is the result of dividing 
-columns 3 by column 2.
-
+the "disp" column by the "cyl" column.
 ```{r}
 mtcars.data <- mtcars
-mtcars.data$displacement.per.cylinder = mtcars[3]/mtcars[2]
+mtcars.data["displacement.per.cylinder"] <- mtcars$disp / mtcars$cyl
 
-glimpse(mtcars.data)
+print(mtcars.data)
 ```
-By glimpsing the dataframe, we notice that the 'displacement.per.cylinder'
-column is present, but is stored as a dataframe that is not easily viewed. Upon
-examining the object itself, all values are present in the table, but it must
-be opened manually to view them. Any version of glimpse or print will simply 
-list the column row location is filled by a dataframe.
 
-To get around this issue, we can use the 'tidyverse' alternative. Below, we tell
-R to, once again, store mtcars into our data. This time, we create a new 
-dataframe, termed 'tidyverse_disp_per_cyl', that is mutated by the addition of a
-column that has the values of displacement divided by the number of cylinders
-added to it. 
+
+By printing the dataframe, we notice that the 'displacement.per.cylinder'
+column is present and we see that the values are present.
+
+We can also address this issue using "tidyverse". Below, we tell R to, once 
+again, store mtcars into our data. This time, we create a new dataframe, termed 'tidyverse_disp_per_cyl', that is mutated by the addition of a column that has 
+the values of displacement divided by the number of cylinders added to it. We 
+then tell this new object to only store the selected column and remove the rest
+of the mtcars data.
 ```{r}
 mtcars <- mtcars
 tidyverse_disp_per_cyl <- mtcars %>%
-  mutate(disp_per_cyl = (paste(disp / cyl)))
+  mutate(disp_per_cyl = (paste(disp / cyl))) %>%
+  select(disp_per_cyl)
+  
 print(tidyverse_disp_per_cyl)
 ```
-Via this method, we store the actual value into this dataframe, 
-instead of creating a dataframe within a dataframe.
+Via this method, we store the actual value into this dataframe. However, this 
+dataframe has been stored as a character class. The significance can be seen
+through the removal of "0" characters. As these were non-meaningful, when 
+storing the data as a character object, it removed those characters.
 
-
-
-Homework 8.2: Facotrs
+Homework 8.2: Factors
 
 
 ```{r}
