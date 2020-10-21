@@ -1,0 +1,353 @@
+---
+title: "Homework 8"
+output: github_document
+---
+Firstly, we need to load the libraries required for this assignment. All steps
+will require the 'tidyverse' library while the last step will require 
+'nycflights13'.
+
+---
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
+Homework Step 1.
+Generate a list containing three named objects. The code to do this is listed
+below, with the objects 'Frank', 'Pizza', and '23', each named 'Name', 'Favorite
+Food', and 'Age' respectively.
+
+```{r}
+hw_08_list <- list( Name = "Frank", 
+                    Favorite_Food = "Pizza", 
+                    Age = 23)
+glimpse(hw_08_list)
+```
+
+The next goal is to call each of the elements in this list by different calling
+mechanisms. As you can see, we call the first item on the list by it's name, 
+then by [[ ]] and [] syntax respectively for the last two items on the list.
+
+```{r}
+hw_08_list["Name"]
+
+hw_08_list[[2]]
+
+hw_08_list[3]
+
+```
+For the next step, we need to view the library 'mtcars' 's 'mpg' column in two 
+different ways. The first method we have is simply calling mpg using the single
+bracket format.
+`
+```{r}
+mtcars["mpg"]
+```
+
+We can also call 'mtcars' 's 'mpg' column by calling the column number. In this
+case, we call column 1 of mtcars.
+```{r}
+mtcars[1]
+```
+
+The next step is to introduce a column into the mtcars dataset for "displacement
+per cylinder". We can do that via the commands below, where we tell R to add 
+store 'mtcars' as a new dataframe called 'mtcars.data' and then add the column
+called 'displacement.per.cylinder' to it, which is the result of dividing 
+columns 3 by column 2.
+
+```{r}
+mtcars.data <- mtcars
+mtcars.data$displacement.per.cylinder = mtcars[3]/mtcars[2]
+
+glimpse(mtcars.data)
+```
+By glimpsing the dataframe, we notice that the 'displacement.per.cylinder'
+column is present, but is stored as a dataframe that is not easily viewed. Upon
+examining the object itself, all values are present in the table, but it must
+be opened manually to view them. Any version of glimpse or print will simply 
+list the column row location is filled by a dataframe.
+
+To get around this issue, we can use the 'tidyverse' alternative. Below, we tell
+R to, once again, store mtcars into our data. This time, we create a new 
+dataframe, termed 'tidyverse_disp_per_cyl', that is mutated by the addition of a
+column that has the values of displacement divided by the number of cylinders
+added to it. 
+```{r}
+mtcars <- mtcars
+tidyverse_disp_per_cyl <- mtcars %>%
+  mutate(disp_per_cyl = (paste(disp / cyl)))
+print(tidyverse_disp_per_cyl)
+```
+Via this method, we store the actual value into this dataframe, 
+instead of creating a dataframe within a dataframe.
+
+
+
+Homework 8.2: Facotrs
+
+
+```{r}
+num.vec <- c(3,4,1,5)
+
+num.fac <- as.factor(num.vec)
+
+num.vec.v2 <- as.numeric(num.fac)
+```
+
+With the command "num.vec <- c(3,4,1,5)", you can see the output, listed below,
+shows the vector stored is a series of numbers "3 4 1 5".
+
+```{r}
+glimpse(num.vec)
+```
+Now we convert this vector to a factor using the command 
+"num.fac <- as.factor(num.vec)". The output we receive is listed below.
+
+```{r}
+glimpse(num.fac)
+```
+You can see now that the values returned consist of the characters "1", "3", 
+"4", and "5". The order these are listed in is 2, 3, 1, 4, so while "1" is the
+first character returned here, it is actually the third number in the list. The
+first number in the list is the second returned value, so "3", followed by the 
+third value, "4", then "1" and "5". So 2, 3, 1, 4 designates the list's order, 
+while 1, 3, 4, 5, are the "alphabetical" character order of those returned 
+values.
+
+Lastly, when we return the factor to a numeric vector format, the content is
+altered drastically. You can see this through the command below.
+
+```{r}
+glimpse(num.vec.v2)
+```
+As you can see, instead of taking the original content, it has taken the 
+"alphabetical" order of those numbers instead, and returned them in this vector
+conversion. All information regarding the original numbers is lost, we now only
+know that the third number was the smallest, followed by the first, second, and
+fourth.
+
+
+
+Homework 8.3: Exploratory Data Analysis
+
+This assignment requests for the exploration of data. In this case, the 
+'nycflights13' dataset was chosen for analysis.
+
+8.3.1: Delayed Flights
+The first analysis that was conducted to determine the percentage of flights 
+from each carrier that were at least one hour later. First, like mentioned 
+before, the libraries required for this part of the homework are 'tidyverse' and 
+'nycflights13'
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
+
+The next command sent is to create a new dataframe, called 'carrier_delays' that 
+is derived from the 'nycflights13:flights' data set. This data will then be 
+grouped by whether theflights were at least 60 minutes late and by carrier. The 
+results of the grouping will be summarised in a column titled 
+'delayed.flight.per.carrier'.
+
+```{r}
+carrier_delays <- flights %>%
+  group_by(dep_delay >= 60, carrier) %>%
+  summarise(delayed.flights.per.carrier = n(), .groups='keep')
+
+print(carrier_delays)
+```
+
+Next, we need to divide the column containing the values for 
+'delayed.flight.per.carrier' into their own unique columns based on the various
+row values (e.g. 'FALSE, 'TRUE', 'NA'). To do this, we first generate a new 
+object, termed 'wide_carrier_delays', that is created by having R pivot the 
+data, taking column names from the 'dep_delay >= 60' column, and the values from
+the 'delayed.flights.per.carrier column. We also choose to rename this data to 
+make it more clear what they are testing. Column names are changed from 'FALSE' 
+and 'TRUE' to 'Not.One.Hour.Late' and 'One.Hour.Late', respectively.'NA' was 
+also changed to 'Unknown', as the data for these flights are not listed. This 
+data will not be used in further analysis as it may skew results.
+
+```{r}
+wide_carrier_delays <- carrier_delays %>% 
+      pivot_wider(names_from = 'dep_delay >= 60', values_from = 
+                'delayed.flights.per.carrier') %>%
+      rename(Not.One.Hour.Late = 'FALSE', One.Hour.Late = 'TRUE', 
+             Unknown = 'NA')
+
+print(wide_carrier_delays)
+```
+
+
+After entering this command, we can see that our data is now nicely sorted by
+whether or not the flights were late, as well as by the flight carriers. Now
+we need to add in some simple mathematics to determine the percentage of flights
+that were late. This is done by generating a new object, termed 
+'wide_carrier_delays_percentage' derived from the 'wide_carrier_delays' dataset 
+previously created. This new dataset is generated by the addition of two new 
+columns. Firstly, we generated one column listing the values of flights that 
+were and were not one hour late, by summing the columns 'Not.One.Hour.Late' and
+'One.Hour.Late', returned as 'Total.Flights'. We then add a second column which
+will give us the percentage of late flights. This column, termed 
+'Percent.delayed' is created by dividing the 'One.Hour.Late' flights by 
+'Total.Flights' and multiplying the value by 100. This returns a percentage of 
+flights that were late, by carrier.
+
+```{r}
+wide_carrier_delays_percentage <- wide_carrier_delays %>%
+  mutate(Total.Flights = Not.One.Hour.Late + One.Hour.Late) %>%
+  mutate(Percent.Delayed = (One.Hour.Late / Total.Flights)*100)
+
+print(wide_carrier_delays_percentage)
+```
+
+Lastly, we can graph the data by generating a bar plot that consists of the 
+individual carriers on the x-axis and the percent of delayed flights on the 
+y-axis. We can also give our graph a title "Percentage of Flights Delayed by
+1-Hour by Carrier".
+
+```{r}
+Percent_delayed_plot <- ggplot(wide_carrier_delays_percentage, 
+                               aes(x = carrier, y =  Percent.Delayed))+
+                  ggtitle(label= "Percentage of Flights Delayed by 1-Hour
+                          by Carrier")+
+                  geom_bar(stat = "identity")
+
+print(Percent_delayed_plot)
+```
+
+The full length of code for the above commands is listed below.
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+
+carrier_delays <- flights %>%
+  group_by(dep_delay >= 60, carrier) %>%
+  summarise(delayed.flights.per.carrier = n(), .groups='keep')
+
+
+wide_carrier_delays <- carrier_delays %>% 
+      pivot_wider(names_from = 'dep_delay >= 60', values_from = 
+                'delayed.flights.per.carrier') %>%
+      rename(Not.One.Hour.Late = 'FALSE', One.Hour.Late = 'TRUE', 
+             Unknown = 'NA')
+
+wide_carrier_delays_percentage <- wide_carrier_delays %>%
+  mutate(Total.Flights = Not.One.Hour.Late + One.Hour.Late) %>%
+  mutate(Percent.Delayed = (One.Hour.Late / Total.Flights)*100)
+
+Percent_delayed_plot <- ggplot(wide_carrier_delays_percentage, 
+                               aes(x = carrier, y =  Percent.Delayed))+
+                  ggtitle(label= "Percentage of Flights Delayed by 1-Hour
+                          by Carrier")+
+                  geom_bar(stat = "identity")
+```
+
+
+8.3.2: Early-Bird Flights
+
+The next data analysis conducted was performed to identify if different carriers
+showed varying biases towards early day flights, specifically before 8 AM.
+
+The first step is to once again load the required libraries.
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
+Next, we generate a dataframe labeled 'early_bird_flights' from the 
+'nycflights13::flights' data. The data taken is immediately grouped by scheduled
+departure time, 'dep_time', being less than 801, or 8:01 AM, as well as by 
+'carrier'. Data acquired is kept in a new column termed, 
+'early.bird.flights.per.carrier'.
+
+```{r}
+early_bird_flights <- flights %>%
+  group_by(dep_time < 801, carrier) %>%
+  summarise(early.bird.flights.per.carrier = n(), .groups='keep')
+
+print(early_bird_flights)
+```
+
+After establishing this dataset, like previously done, we will need to pivot the
+data on the desired column. We therefore take the column 'dep_time < 801', and
+pivot the data on it, generating columns with names from the values in column
+'dep_time < 801' and values from the integers in column 
+'early.bird.flights.per.carrier'. Once again, we rename the columns listed to 
+match the description as performed in the first data analysis, rather than using
+'FALSE', 'TRUE', and 'NA'.
+
+```{r}
+wide_early_bird_flights <- early_bird_flights %>% 
+      pivot_wider(names_from = 'dep_time < 801', values_from = 
+                'early.bird.flights.per.carrier') %>%
+      rename(Regular.Flight = 'FALSE', Early.Bird.Flight = 'TRUE', 
+             Unknown = 'NA')
+
+print(wide_early_bird_flights)
+```
+
+After this, we once again need to add in columns that list the total flights
+considered and the percentage of flights classified as "early bird flights", or
+before 8 AM. This is first done by adding the columns 'Regular.Flight' and 
+'Early.Bird.Flight', giving us the column and values for 'Total.Flights'. Next,
+we take the 'Early.Bird.Flight' and divide it by 'Total.Flights', then 
+multiplying it by 100. This gives us the percentage by carrier of flights that 
+were before 8 AM.
+
+```{r}
+early_bird_flight_percentage <- wide_early_bird_flights %>%
+  mutate(Total.Flights = Early.Bird.Flight + Regular.Flight) %>%
+  mutate(Early.Bird.Flight.Percentage = (Early.Bird.Flight / Total.Flights)*100)
+
+print(early_bird_flight_percentage)
+```
+
+Lastly, we can once again graph our data by carrier and percentage of flights 
+before 8 AM. This is done via the commands below.
+
+```{r}
+early_bird_plot <- ggplot(early_bird_flight_percentage, 
+                               aes(x = carrier, y =  Early.Bird.Flight.Percentage))+
+                  ggtitle(label= "Early-Bird Flights by Carrier",
+                          subtitle= "Percentage of Flights Departing Before 8 AM")+
+                  geom_bar(stat = "identity")
+
+print(early_bird_plot)
+```
+As you can see, the percentage of flights that take off before 8 AM varied 
+drastically by carrier. 
+
+The entire code for this set of data is listed below.
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+
+early_bird_flights <- flights %>%
+  group_by(dep_time < 801, carrier) %>%
+  summarise(early.bird.flights.per.carrier = n(), .groups='keep')
+
+
+wide_early_bird_flights <- early_bird_flights %>% 
+      pivot_wider(names_from = 'dep_time < 801', values_from = 
+                'early.bird.flights.per.carrier') %>%
+      rename(Regular.Flight = 'FALSE', Early.Bird.Flight = 'TRUE', 
+             Unknown = 'NA')
+
+early_bird_flight_percentage <- wide_early_bird_flights %>%
+  mutate(Total.Flights = Early.Bird.Flight + Regular.Flight) %>%
+  mutate(Early.Bird.Flight.Percentage = (Early.Bird.Flight / Total.Flights)*100)
+
+early_bird_plot <- ggplot(early_bird_flight_percentage, 
+                               aes(x = carrier, y =  Early.Bird.Flight.Percentage))+
+                  ggtitle(label= "Early-Bird Flights by Carrier",
+                          subtitle= "Percentage of Flights Departing Before 8 AM")+
+                  geom_bar(stat = "identity")
+```
+
