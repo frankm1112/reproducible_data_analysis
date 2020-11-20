@@ -102,13 +102,16 @@ server <- function(input,output){
   ### input columns and shifting them into three columns (Check my hw_09 
   ### print(long_colony_counts), the output would be the same). The commands 
   ### will probably need adjusting, but essentially here are the requirements.
-  ### 1. The first data column with data to be compared MUST be named 'Sample'.
-  ###    There are a couple of issues here. '.csv' files can be saved several
-  ###    ways. If you save it as the default, comma delimited file type, this
-  ###    will not work. This is due to the first column being named
-  ###    differently than it appears in a program like excel. Instead of 
-  ###    saving as 'Sample' it will save as 'ï..Sample'. I tried adjusting the
-  ###    code to account for this but got some errors.
+  ### 1. The first data column with data to be compared MUST contain the 
+  ###    string 'Sample' AND no other column can include this. Originally 
+  ###    this commands used the 'starts_with' command instead of 'contains'
+  ###    but certain '.csv' file formats add characters to the beginning of
+  ###    the first data column which would cause errors.
+  ### 2. The names and values these values are then set to are supposed to
+  ###    represent the x and y-axes respectively. If we can set a 'default' 
+  ###    so there will not cause errors, such as the names included now, with 
+  ###    additional reactive-user based inputs that can alter these values 
+  ###    that would probably be best. Again, for now they are a placeholder.
   
   output$csv.plot <- renderPlot({
     data <- input$data_file
@@ -119,7 +122,7 @@ server <- function(input,output){
                   in a '.csv' format."))
     data_1 <- read.csv(data$datapath, header = input$header)
     long_data <- pivot_longer(data_1,
-                              cols = !starts_with('Sample'),
+                              cols = !contains('Sample'),
                               names_to = "Time_Points",
                               values_to = "Number"
                               )

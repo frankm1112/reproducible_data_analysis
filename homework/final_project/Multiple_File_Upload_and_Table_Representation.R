@@ -24,8 +24,9 @@ ui <- fluidPage(
     ### The wellPanel command generates a panel in this designated 
     ### area with the following objects.
     ### 1. fileInput: This argument generates a file upload tab that
-    ###    allows for users to upload a desired file. "Select CSV File"
-    ###    is included to inform the user, only upload a CSV file. The
+    ###    allows for users to upload a desired file. "First CSV File"
+    ###    is included to inform the user, only upload a CSV file, and this 
+    ###    is the first for required data analysis. The
     ###    input will only 'accept' this ".csv" format. Lastly, the 
     ###    buttonLabel indicates the name of the button that needs to be 
     ###    clicked to actually upload the file by the user.
@@ -54,6 +55,9 @@ ui <- fluidPage(
     column(8, offset = 1,
            tableOutput("csv.data.1")
     ),
+    
+    ### Below is a repeated iteration that allows someone to copy in a 
+    ### second CSV file is they wish. Code is identical to above.
     
     column(3, offset = 0,
            wellPanel(
@@ -99,6 +103,8 @@ server <- function(input,output){
                   in a '.csv' format."))
     read.csv(data_1$datapath, header = input$header)
   })
+  
+  ### Code below is implemented to give output for the second CSV file.
   
   output$csv.data.2 <- renderTable({
     data_2 <- input$data_file_2
