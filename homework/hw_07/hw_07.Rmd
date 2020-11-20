@@ -28,7 +28,7 @@ integration of images into ggplot, respectively. After initializing the
 required packages, objects need to be created. They store UTK Covid-19 data and
 an image file as objects respectively.
 
-```{r eval = FALSE}
+```{r}
 UTK_Covid_Data <- read_csv("data/UTK_Covid_data.csv")
 space_cat_img <- readPNG("homework/hw_07/data/spacecat.png")
 ```

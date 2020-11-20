@@ -205,20 +205,18 @@ a "user" variable. In this case, the user can just be referred to as the one
 entering the new veterinarian client information. 
 
 ```{r}
-summary.pet_description <- function(df) {
+new_summary.pet_description <- function(df) {
   print(paste0("Data Filed by: ", attr(df, "user")))
   df_summ <- summary.data.frame(df)
   df_summ
 }
 ```
 
-By entering the summary command below, we now can relay the data as well as an
-initial statement of who entered the data.
+By entering the "summary.pet_description" command below, we now can relay the data as well as an initial statement of who entered the data.
 
 ```{r}
-summary(new_class)
+new_summary.pet_description(new_class)
 ```
 Items like this can prove useful in clarifying pertinent information about a 
 dataset, in this case who entered the data. Perhaps this would allow for easy
-troubleshooting, telling anyone to talk to John Smith and if any inconsistencies
-are found in the information he filed.
+troubleshooting, telling anyone to talk to John Smith and if any inconsistencies are found in the information he filed.
