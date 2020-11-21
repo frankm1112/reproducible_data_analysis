@@ -1,4 +1,5 @@
 library(shiny)
+library(tidyverse)
 library(ggplot2)
 
 ui <- fluidPage(
@@ -42,7 +43,10 @@ ui <- fluidPage(
                        "Select CSV File", 
                        accept = ".csv",
                        buttonLabel = "Browse..."),
-             checkboxInput("header", "CSV Header", TRUE)
+             checkboxInput("header", "CSV Header", TRUE),
+             textInput("user_graph_title", "Graph Title", "Title"),
+             textInput("user_x_axis_label", "X-axis Label", "Time"),
+             textInput("user_y_axis_label", "Y-axis Label", "Numeric Distribution")
            )
     ),
     
@@ -119,7 +123,7 @@ server <- function(input,output){
                   in a '.csv' format."))
     data_1 <- read.csv(data$datapath, header = input$header)
     long_data <- pivot_longer(data_1,
-                              cols = !starts_with('Sample'),
+                              cols = !contains('Sample'),
                               names_to = "Time_Points",
                               values_to = "Number"
                               )

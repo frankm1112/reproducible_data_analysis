@@ -1,4 +1,5 @@
 library(shiny)
+library(tidyverse)
 library(ggplot2)
 
 ui <- fluidPage(
@@ -42,7 +43,10 @@ ui <- fluidPage(
                        "Select CSV File", 
                        accept = ".csv",
                        buttonLabel = "Browse..."),
-             checkboxInput("header", "CSV Header", TRUE)
+             checkboxInput("header", "CSV Header", TRUE),
+             textInput("user_graph_title", "Graph Title", "Title"),
+             textInput("user_x_axis_label", "X-axis Label", "Time"),
+             textInput("user_y_axis_label", "Y-axis Label", "Numeric Distribution")
            )
     ),
     
@@ -50,7 +54,7 @@ ui <- fluidPage(
     ### the tableOutput defined by "csv.data". As columns 4-12 are vacant,
     ### the next 8 columns (offset by 1, so 5-12), will be used to plot 
     ### this table.
-
+    
     column(8, offset = 1,
            tableOutput("csv.data")
     ),
@@ -95,23 +99,20 @@ server <- function(input,output){
   ### The 'data' and 'ext' features can likely be streamlined in the future,
   ### as they are repetitive, and will be used if we integrate stats as well, 
   ### or any other tool. req() and validate() as well. 
-
+  
   ### The first two steps are straight forward, saving the data as an object.
   ### This, again, can probably be streamlined later. It stores the uploaded
   ### file as 'data_1'. It then pivots the data to a long format, taking all
   ### input columns and shifting them into three columns (Check my hw_09 
   ### print(long_colony_counts), the output would be the same). The commands 
   ### will probably need adjusting, but essentially here are the requirements.
-  ### 1. The first data column with data to be compared MUST contain the 
-  ###    string 'Sample' AND no other column can include this. Originally 
-  ###    this commands used the 'starts_with' command instead of 'contains'
-  ###    but certain '.csv' file formats add characters to the beginning of
-  ###    the first data column which would cause errors.
-  ### 2. The names and values these values are then set to are supposed to
-  ###    represent the x and y-axes respectively. If we can set a 'default' 
-  ###    so there will not cause errors, such as the names included now, with 
-  ###    additional reactive-user based inputs that can alter these values 
-  ###    that would probably be best. Again, for now they are a placeholder.
+  ### 1. The first data column with data to be compared MUST be named 'Sample'.
+  ###    There are a couple of issues here. '.csv' files can be saved several
+  ###    ways. If you save it as the default, comma delimited file type, this
+  ###    will not work. This is due to the first column being named
+  ###    differently than it appears in a program like excel. Instead of 
+  ###    saving as 'Sample' it will save as 'ï..Sample'. I tried adjusting the
+  ###    code to account for this but got some errors.
   
   output$csv.plot <- renderPlot({
     data <- input$data_file
@@ -125,7 +126,7 @@ server <- function(input,output){
                               cols = !contains('Sample'),
                               names_to = "Time_Points",
                               values_to = "Number"
-                              )
+    )
     ggplot(long_data, aes(x = Time_Points, y = Number))+
       geom_point()
   })
