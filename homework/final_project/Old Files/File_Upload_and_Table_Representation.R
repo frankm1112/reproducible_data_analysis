@@ -46,7 +46,9 @@ ui <- fluidPage(
              checkboxInput("header", "CSV Header", TRUE),
              textInput("user_graph_title", "Graph Title", "Title"),
              textInput("user_x_axis_label", "X-axis Label", "Time"),
-             textInput("user_y_axis_label", "Y-axis Label", "Numeric Distribution")
+             textInput("user_y_axis_label", "Y-axis Label", 
+                       "Numeric Distribution"),
+             submitButton("Update")
            )
     ),
     

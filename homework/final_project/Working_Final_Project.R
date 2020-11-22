@@ -46,7 +46,9 @@ ui <- fluidPage(
              checkboxInput("header", "CSV Header", TRUE),
              textInput("user_graph_title", "Graph Title", "Title"),
              textInput("user_x_axis_label", "X-axis Label", "Time"),
-             textInput("user_y_axis_label", "Y-axis Label", "Numeric Distribution")
+             textInput("user_y_axis_label", "Y-axis Label", 
+                       "Numeric Distribution"),
+             submitButton("Update")
            )
     ),
     
@@ -54,7 +56,7 @@ ui <- fluidPage(
     ### the tableOutput defined by "csv.data". As columns 4-12 are vacant,
     ### the next 8 columns (offset by 1, so 5-12), will be used to plot 
     ### this table.
-    
+
     column(8, offset = 1,
            tableOutput("csv.data")
     ),
@@ -99,7 +101,7 @@ server <- function(input,output){
   ### The 'data' and 'ext' features can likely be streamlined in the future,
   ### as they are repetitive, and will be used if we integrate stats as well, 
   ### or any other tool. req() and validate() as well. 
-  
+
   ### The first two steps are straight forward, saving the data as an object.
   ### This, again, can probably be streamlined later. It stores the uploaded
   ### file as 'data_1'. It then pivots the data to a long format, taking all
@@ -126,7 +128,7 @@ server <- function(input,output){
                               cols = !contains('Sample'),
                               names_to = "Time_Points",
                               values_to = "Number"
-    )
+                              )
     ggplot(long_data, aes(x = Time_Points, y = Number))+
       geom_point()
   })
