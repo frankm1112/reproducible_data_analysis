@@ -16,4 +16,4 @@ long_colony_counts <- pivot_longer(colony_counts,
 
 print(long_colony_counts)
 
-rename(long_colony_counts, Pizza = Time_Points)
+rename(long_colony_counts, Pizza = contains('Time'))
