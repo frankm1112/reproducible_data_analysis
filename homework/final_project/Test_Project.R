@@ -197,6 +197,23 @@ server <- function(input,output){
     validate(need(ext == "csv", "Please confirm uploaded file extension is saved
                   in a '.csv' format."))
     data_1 <- read.csv(data$datapath, header = input$header)
+    
+    ### This 'for loop' ensures that the user is only inputting the appropriate
+    ### information type
+    for (i in colnames(data_1)){
+      x <- c(colnames(data_1))
+      if (i == x[1]){
+        next
+      }
+      else if (class(data_1[[i]]) != "numeric"){
+        validate(need(class(data_1[[i]]) == "numeric", "A cell that is
+                      neither a row nor column header holds a non-numericvalue.
+                      Please ensure ALL non-header values are numeri."))
+      }
+      else
+        next
+    }
+    
     long_data <- pivot_longer(data_1,
                               cols = !contains('Sample'),
                               names_to = "Time_Points",
