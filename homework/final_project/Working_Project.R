@@ -59,8 +59,8 @@ ui <- dashboardPage(
                     align = "center"),
                  h5("1. Ensure the first column and ONLY the first column,
                   contains the string 'Sample'."),
-                 h5("2. Ensure all non-column and row header values are
-                  numeric."),
+                 h5("2. Ensure all non-row header values are numeric. This 
+                    includes column headers."),
                  h5("3. Ensure that uploaded file type is '.csv'."),
                  h5("Failure to follow these guidelines will result in graphing
                   errors.")
@@ -167,7 +167,7 @@ server <- function(input,output){
     req(data)
     validate(need(ext == "csv", "Please confirm uploaded file extension is saved
                   in a '.csv' format."))
-    read.csv(data$datapath, header = input$header)
+    read.csv(data$datapath, header = input$header, check.names = FALSE)
   })
   
   ### Plot progress so far. The file is successfully connected to file upload.
@@ -196,19 +196,24 @@ server <- function(input,output){
     req(data)
     validate(need(ext == "csv", "Please confirm uploaded file extension is saved
                   in a '.csv' format."))
-    data_1 <- read.csv(data$datapath, header = input$header)
+    data_1 <- read.csv(data$datapath, header = input$header, check.names = FALSE)
     
     ### This 'for loop' ensures that the user is only inputting the appropriate
     ### information type
     for (i in colnames(data_1)){
-      x <- c(colnames(data_1))
-      if (i == x[1]){
+      data_1_columns <- c(colnames(data_1))
+      if (i == data_1_columns[1]){
         next
       }
       else if (class(data_1[[i]]) != "numeric"){
         validate(need(class(data_1[[i]]) == "numeric", "A cell that is
-                      neither a row nor column header holds a non-numericvalue.
-                      Please ensure ALL non-header values are numeri."))
+                      neither a row nor column header holds a non-numeric value.
+                      Please ensure ALL non-row header values are numeric."))
+      }
+      else if (sum(is.na(as.numeric(data_1_columns))) != 1) {
+        validate(need(sum(is.na(as.numeric(data_1_columns))) == '[1] 1', "At least 
+        one column header is not a numeric value. Please ensure all column 
+        headers are numeric."))
       }
       else
         next
@@ -225,7 +230,7 @@ server <- function(input,output){
     ### aixs labels, and overall color scheme. All color schemes are cupposed to be color blind friendly
     long_data_final <- rename(long_data, 'Sample' = contains('Sample'))
     
-    ggplot(long_data_final, aes(x = Time_Points, y = Number, color = Sample, group = Sample))+
+    ggplot(long_data_final, aes(x = reorder(Time_Points, sort(as.numeric(Time_Points))), y = Number, color = Sample, group = Sample))+
       geom_line(linetype = "solid") +
       geom_point() +
       xlab(input$user_x_axis_label) + ### x-axis label text
