@@ -219,9 +219,11 @@ server <- function(input,output) {
         next
       }
       else if (class(data_1[[i]]) != "numeric"){
-        validate(need(class(data_1[[i]]) == "numeric", "A cell that is
+        if(class(data_1[[i]]) != "integer"){
+          validate(need(class(data_1[[i]]) == "numeric", "A cell that is
                       neither a row nor column header holds a non-numeric value.
                       Please ensure ALL non-row header values are numeric."))
+        }
       }
       else if (sum(is.na(as.numeric(data_1_columns))) != 1) {
         validate(need(sum(is.na(as.numeric(data_1_columns))) == '[1] 1', "At least 
