@@ -107,6 +107,7 @@ ui <- dashboardPage(
              textInput("average_1","Data Name 1", "i.e. CB-A"),
              textInput("average_2","Data Name 2", "i.e. CB-D"),
              textInput("average_3","Data Name 3", "i.e. Coculture"),
+             submitButton("Update")
       ),
       
       ### Average Table Output 1
@@ -472,7 +473,7 @@ server <- function(input,output) {
                                 values_from = contains('Number'))
     
     CBA_replicates <- back_to_wide %>%
-      select(contains('CB-A'))
+      select(contains(input$average_1))
     CBA_average <- as.data.frame(rowMeans(CBA_replicates)) %>%
       rename(
         Average = 'rowMeans(CBA_replicates)'
@@ -505,7 +506,7 @@ server <- function(input,output) {
                                 values_from = contains('Number'))
     
     CBD_replicates <- back_to_wide %>%
-      select(contains('CB-D'))
+      select(contains(input$average_2))
     CBD_average <- as.data.frame(rowMeans(CBD_replicates)) %>%
       rename(
         Average = 'rowMeans(CBD_replicates)'
@@ -538,7 +539,7 @@ server <- function(input,output) {
                                 values_from = contains('Number'))
     
     Coculture_replicates <- back_to_wide %>%
-      select(contains('Coculture'))
+      select(contains(input$average_3))
     Coculture_average <- as.data.frame(rowMeans(Coculture_replicates)) %>%
       rename(
         Average = 'rowMeans(Coculture_replicates)'
