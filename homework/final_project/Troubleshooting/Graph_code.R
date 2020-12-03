@@ -42,6 +42,7 @@ for (i in colnames(colony_counts)) {
   }
 }
 
+ids <<- NULL
 
 class(long_colony_counts$[1])
 
