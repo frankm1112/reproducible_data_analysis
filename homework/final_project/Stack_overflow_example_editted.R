@@ -50,43 +50,22 @@ server <- shinyServer(function(input,output,session){
         them all by inserting CB-A."})
     }else ({
       out <- list()
-      data <- input$data_file
-      ext <- tools::file_ext(data$datapath)
-      req(data)
-      validate(need(ext == "csv", "Please confirm uploaded file extension is saved
-                  in a '.csv' format."))
-      data_1 <- read.csv(data$datapath, header = input$header, check.names = FALSE)
-      long_data <- pivot_longer(data_1,
-                                cols = !contains('Sample'),
-                                names_to = "Time_Points",
-                                values_to = "Number"
-      )
-      ### ggplot takes many togglable options from the user 
-      ### this allows the user to format the axis titles , Graph title,
-      ### aixs labels, and overall color scheme. All color schemes are cupposed to be color blind friendly
-      long_data_final <- rename(long_data, 'Sample' = contains('Sample'))
-      back_to_wide <- pivot_wider(long_data_final,
-                                  names_from = contains('Sample'),
-                                  values_from = contains('Number'))
-      # Get ids for textboxes
-      verbatim.user.input <- sapply(1:length(input.count),function(i){
-        paste("txtInput",input.count[i],sep="")
+      
+      ### I believe this takes the names of the inputs and puts them into a vector.
+      txtbox_ids <- sapply(1:length(ids),function(i){
+        paste("txtInput",ids[i],sep="")
       })
       
-      # Get values (put in table instructions here)
-      for(i in 1:length(verbatim.user.input)){
-        out[[i]] <- renderTable({
-          replicates <- back_to_wide %>%
-            select(contains(input[[ verbatim.user.input[i] ]]))
-          average <- as.data.frame(rowMeans(replicates)) %>%
-            rename(
-              Average = 'rowMeans(replicates)'
-            )
-          all <- cbind(replicates, average)
-        })
+      ### I believe this takes the values from the pre-established values. And
+      ### just add them to a textbox.
+      for(i in 1:length(txtbox_ids)){
+        out[[i]] <- sprintf("Txtbox #%d has value: %s",i,input[[ txtbox_ids[i] ]])
       }
-      make.data.tables <- renderPrint({out})
-    })
+      
+      ### This simply takes the final version of 'out' renderPrints it into a
+      ### new object and that output object is displayed later.
+      output$txtOut <- renderPrint({out})
+    }
   })
 })
 
