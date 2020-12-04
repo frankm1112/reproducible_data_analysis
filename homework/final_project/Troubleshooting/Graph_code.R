@@ -44,24 +44,15 @@ for (i in colnames(colony_counts)) {
 
 ids <<- NULL
 
-class(long_colony_counts$[1])
+data_1 <- colony_counts
 
+long_data <- pivot_longer(data_1,
+                          cols = !contains('Sample'),
+                          names_to = "Time_Points",
+                          values_to = "Number"
+)
+long_data_final <- rename(long_data, 'Sample' = contains('Sample'))
+back_to_wide <- pivot_wider(long_data_final,
+                            names_from = contains('Sample'),
+                            values_from = contains('Number'))
 
-
-output <- class(i)
-for (i in col){
-  class(col(i)) 
-}
-
-for 
-if (! class(df(col(i))) == "numeric") {
-}
-  else if (! class(user) == "character"){
-    warning("Error: User provided is not given as a character value.")
-  }
-  else { attr(df, "user") <- user
-  structure(df, class = c("pet_description", "data.frame"))
-  }
-}
-
-for (columnName,)
