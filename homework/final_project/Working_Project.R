@@ -472,13 +472,13 @@ server <- function(input,output) {
                                 names_from = contains('Sample'),
                                 values_from = contains('Number'))
     
-    CBA_replicates <- back_to_wide %>%
+    replicates_1 <- back_to_wide %>%
       select(contains(input$average_1))
-    CBA_average <- as.data.frame(rowMeans(CBA_replicates)) %>%
+    replicates_1_average <- as.data.frame(rowMeans(replicates_1)) %>%
       rename(
-        Average = 'rowMeans(CBA_replicates)'
+        Average = 'rowMeans(replicates_1)'
       )
-    CBA_all <- cbind(CBA_replicates, CBA_average)
+    all_1 <- cbind(replicates_1, replicates_1_average)
   })
   
   ### Average panel output 2
@@ -505,13 +505,13 @@ server <- function(input,output) {
                                 names_from = contains('Sample'),
                                 values_from = contains('Number'))
     
-    CBD_replicates <- back_to_wide %>%
+    replicates_2 <- back_to_wide %>%
       select(contains(input$average_2))
-    CBD_average <- as.data.frame(rowMeans(CBD_replicates)) %>%
+    replicates_2_average <- as.data.frame(rowMeans(replicates_2)) %>%
       rename(
-        Average = 'rowMeans(CBD_replicates)'
+        Average = 'rowMeans(replicates_2)'
       )
-    CBD_all <- cbind(CBD_replicates, CBD_average)
+    all_2 <- cbind(replicates_2, replicates_2_average)
   })
   
   ### Average panel output 3
@@ -538,13 +538,13 @@ server <- function(input,output) {
                                 names_from = contains('Sample'),
                                 values_from = contains('Number'))
     
-    Coculture_replicates <- back_to_wide %>%
+    replicates_3 <- back_to_wide %>%
       select(contains(input$average_3))
-    Coculture_average <- as.data.frame(rowMeans(Coculture_replicates)) %>%
+    replicates_3_average <- as.data.frame(rowMeans(replicates_3)) %>%
       rename(
-        Average = 'rowMeans(Coculture_replicates)'
+        Average = 'rowMeans(replicates_3)'
       )
-    Coculture_all <- cbind(Coculture_replicates, Coculture_average)
+    all_3 <- cbind(replicates_3, replicates_3_average)
   })
   
 }
